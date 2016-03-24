@@ -1,0 +1,5 @@
+.settings
+build/
+test/
+.classpath
+.project

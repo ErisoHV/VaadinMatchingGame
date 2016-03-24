@@ -1,0 +1,17 @@
+@import "addons.scss";
+@import "vaadinmatchinggame.scss";
+
+/* This file prefixes all rules with the theme name to avoid causing conflicts with other themes. */
+/* The actual styles should be defined in vaadinmatchinggame.scss */
+.vaadinmatchinggame {
+  @include addons;
+  @include vaadinmatchinggame;
+}
+
+#rightSide{border-left:1px solid black; width:500px !important; 
+height:500px !important; left: 500px;}
+#leftSide{float: left; width:499px !important; height:500px !important;}
+
+.h2 span, .h4 span{font-weight:bold;}
+.img{position: absolute; width: 100px; height: 100px;}
+#counter{float: right; width: 58%; height: 32px; font-size: 32px; text-align: right; margin-bottom: 10px;}

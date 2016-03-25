@@ -1,14 +1,16 @@
 package com.example.vaadinmatchinggame;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import javax.servlet.annotation.WebServlet;
 
+import org.openqa.selenium.interactions.internal.MouseAction.Button;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.event.LayoutEvents.LayoutClickEvent;
+import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.event.MouseEvents.ClickListener;
 import com.vaadin.server.FileResource;
@@ -18,29 +20,27 @@ import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
 @Theme("vaadinmatchinggame")
 public class VaadinmatchinggameUI extends UI{
 
-	private final static Logger logger =
-	          Logger.getLogger(VaadinmatchinggameUI.class.getName());
-	 
 	 private String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 	 private int numberOfFaces = 5;
 	 private int size = 400;
 	 private String PATH = basepath + "/WEB-INF/images/smile.png";
-	 private boolean play = true;
 	 private int counter = 0;
 	 
 	 private AbsoluteLayout leftLayout = new AbsoluteLayout();
 	 private AbsoluteLayout rightLayout = new AbsoluteLayout();
 	 private Label labelCounter = new Label("0");
+	 
+	 private Image correctFace = new Image();
 	
 	
 	@WebServlet(value = "/*", asyncSupported = true)
@@ -56,7 +56,7 @@ public class VaadinmatchinggameUI extends UI{
 				+ "<span style=\"color:Purple;\">G</span>ame!", ContentMode.HTML);
 		Label labelH4 = new Label("Click on the extra smiling face on the <span>left</span>.",
 				ContentMode.HTML);
-		CssLayout layout = new CssLayout();
+		final CssLayout layout = new CssLayout();
 		
 		labelH1.setStyleName("h2");
 		labelH4.setStyleName("h4");
@@ -72,15 +72,37 @@ public class VaadinmatchinggameUI extends UI{
 		
 		setContent(layout);
 		
-		//addClickListener(this);
+		UI.getCurrent().setId("body");
 		
-		
-		UI.getCurrent().addClickListener(new ClickListener() {
-			
+		layout.addLayoutClickListener(new LayoutClickListener() {
 			@Override
-			public void click(ClickEvent event) {
-				Notification.show("Game Over");
-			}
+			public void layoutClick(LayoutClickEvent event) {
+				if (event.getButton()== event.BUTTON_LEFT){
+					Component child = event.getChildComponent();
+					if (child != null){
+						ConfirmDialog.show(UI.getCurrent(),"Game Over","Do you want to play again?", "Ok",
+								"Cancel", new ConfirmDialog.Listener() {
+							@Override
+							public void onClose(ConfirmDialog dialog) {
+								if (dialog.isConfirmed()){
+									counter = 0;
+									labelCounter.setValue("" + counter);
+									numberOfFaces = 5;
+									generateFaces();
+								}
+								else{
+									correctFace.setEnabled(false);
+									correctFace.setStyleName("correctImgGameOver");
+									layout.setEnabled(false);
+								}
+							}
+						});
+	
+						
+					}					
+				}
+				}
+				
 		});
 		
 		generateFaces();
@@ -99,6 +121,7 @@ public class VaadinmatchinggameUI extends UI{
 
 			face = new Image(null, resource);
 			Image copyFace = new Image(null, resource);
+			face.setId("img" + 1);
 			
 			face.setAlternateText("smile face");
 			face.setStyleName("img");
@@ -114,55 +137,21 @@ public class VaadinmatchinggameUI extends UI{
 						+ "px; left:" + randomLeft + "px;");
 
 		}
-
-		face.addClickListener(new ClickListener() {
-			
+		
+		correctFace = face;
+		
+		correctFace.addClickListener(new ClickListener() {
 			@Override
 			public void click(ClickEvent event) {
-				UI.getCurrent().getListeners(ClickListener.class);
-				numberOfFaces += 5;
-				counter++;
-				labelCounter.setValue("" + counter);
-				generateFaces();
-				Notification.show("Bien", Notification.Type.HUMANIZED_MESSAGE);
+				if (event.getButton()== event.BUTTON_LEFT){
+					numberOfFaces += 5;
+					counter++;
+					labelCounter.setValue("" + counter);
+					generateFaces();
+				}
+				
 			}
 		});
 
 	}
-	
-	/*public class nextLevel implements ClickListener{
-		@Override
-		public void click(ClickEvent event) {
-			
-			numberOfFaces += 5;
-			counter++;
-			labelCounter.setValue("" + counter);
-			generateFaces();
-			Notification.show("Bien", Notification.Type.HUMANIZED_MESSAGE);
-		}
-		
-		
-	}*/
-	
-	public class GameOverEvent implements ClickListener{
-
-		@Override
-		public void click(ClickEvent event) {
-			Notification.show("AAAAAAAAAAAAAAAAAAAA");
-			
-		}
-		
-	}
-	
-
-/*	@Override
-	public void click(ClickEvent event) {
-		counter = 0;
-		labelCounter.setValue("" + counter);
-		ConfirmDialog.show(getCurrent(), "Test", null);
-		Notification.show("AAAAAAAAAAAAAAAAAAAA");
-		
-		
-	}*/
-
 }

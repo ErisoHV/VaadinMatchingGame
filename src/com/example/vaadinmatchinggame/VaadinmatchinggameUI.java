@@ -4,7 +4,6 @@ import java.io.File;
 
 import javax.servlet.annotation.WebServlet;
 
-import org.openqa.selenium.interactions.internal.MouseAction.Button;
 import org.vaadin.dialogs.ConfirmDialog;
 
 import com.vaadin.annotations.Theme;

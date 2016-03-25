@@ -1,4 +1,4 @@
-# Matchin Game
+# Matching Game
 
 this little game was developed with **Vaadin Framework**
 

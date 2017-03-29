@@ -1,4 +1,4 @@
-package com.example.vaadinmatchinggame;
+package com.game.web.ui;
 
 import java.io.File;
 
@@ -17,7 +17,8 @@ import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.MouseEventDetails.MouseButton;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
@@ -27,7 +28,7 @@ import com.vaadin.ui.UI;
 
 @SuppressWarnings("serial")
 @Theme("vaadinmatchinggame")
-public class VaadinmatchinggameUI extends UI{
+public class VaadinMatchingGameUI extends UI{
 
 	 private String basepath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 	 private int numberOfFaces = 5;
@@ -43,7 +44,7 @@ public class VaadinmatchinggameUI extends UI{
 	
 	
 	@WebServlet(value = "/*", asyncSupported = true)
-	@VaadinServletConfiguration(productionMode = false, ui = VaadinmatchinggameUI.class)
+	@VaadinServletConfiguration(productionMode = false, ui = VaadinMatchingGameUI.class)
 	public static class Servlet extends VaadinServlet {
 	}
 
@@ -76,7 +77,7 @@ public class VaadinmatchinggameUI extends UI{
 		layout.addLayoutClickListener(new LayoutClickListener() {
 			@Override
 			public void layoutClick(LayoutClickEvent event) {
-				if (event.getButton()== event.BUTTON_LEFT){
+				if (event.getButton()== MouseButton.LEFT){
 					Component child = event.getChildComponent();
 					if (child != null){
 						ConfirmDialog.show(UI.getCurrent(),"Game Over","Do you want to play again?", "Ok",
@@ -142,7 +143,7 @@ public class VaadinmatchinggameUI extends UI{
 		correctFace.addClickListener(new ClickListener() {
 			@Override
 			public void click(ClickEvent event) {
-				if (event.getButton()== event.BUTTON_LEFT){
+				if (event.getButton()== MouseButton.LEFT){
 					numberOfFaces += 5;
 					counter++;
 					labelCounter.setValue("" + counter);

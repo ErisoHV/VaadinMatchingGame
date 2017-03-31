@@ -7,5 +7,3 @@ The left and right sides are identical, except for one thing: the left side has 
 After clicking on the extra face (at the top) all the faces disappear and the following new set of faces are shown. As you can see, on both sides 5 more faces than before are shown.
 
 The game ends when the player clicks on anything except the correct face.
-
-<img src="images/01.PNG" height="500px"/>
